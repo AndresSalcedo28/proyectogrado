@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
@@ -5,10 +6,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart'; 
 
-import 'package:accesi/models/rule_model.dart';
+import 'package:accesi/models/principio_model.dart';
 import 'package:accesi/views/about_us.dart';
 import 'package:accesi/views/search.dart';
 
@@ -22,11 +25,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Accesi',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Accesi'),
     );
   }
 }
@@ -41,78 +44,57 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool _loading = true;
+  bool _fetch = true;
   bool _dialVisible = true;
+  List<PrincipioModel> _groups = [];
+  List<String> roomNames = List<String>.empty();
 
-  List _elements = [
-  {'name': 'John', 'group': 'Team A'},
-  {'name': 'Will', 'group': 'Team B'},
-  {'name': 'Beth', 'group': 'Team A'},
-  {'name': 'Miranda', 'group': 'Team B'},
-  {'name': 'Mike', 'group': 'Team C'},
-  {'name': 'Danny', 'group': 'Team C'},
-];
-
-  void _incrementCounter() {
+  Future<void> _refreshGroups({bool state: true}) async {
+    final fetchedGroups = await PrincipioModel.fetchAll();
     setState(() {
-      _counter++;
+      _groups = fetchedGroups;
+      _loading = false;
+      _fetch = false;
     });
   }
 
-  List<RuleModel> _rules = List.filled(
-      1,
-      new RuleModel(
-          nombre: 'Error',
-          descripcion: 'No se obtuvieron datos de la base de datos'));
 
-  Future<void> _fetchRules() async {
-    final rulesTmp = await RuleModel.fetchAll();
+  Widget _groupsCard(PrincipioModel groups) {
+    return Card(
+        child: Column(children: [
+      ListTile(
+        leading: Icon(
+          FontAwesomeIcons.list,
+          size: 35,
+        ),
+        title: Text(
+          groups.nombre,
+        ),
+        subtitle: Text("Definición: ${groups.definicion}")
+      )
+    ]));
+  }
 
-    setState(() {
-      _rules = rulesTmp;
-    });
+  Widget _groupList() {
+    return Container(
+      child: Column(children: _groups.map(_groupsCard).toList()),
+    );
   }
 
   
 
   @override
   Widget build(BuildContext context) {
+    if (_fetch) {
+      _refreshGroups(state: false);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: GroupedListView<dynamic, String>(
-          elements: _elements,
-          groupBy: (element) => element['group'],
-          groupComparator: (value1, value2) => value2.compareTo(value1),
-          itemComparator: (item1, item2) =>
-              item1['name'].compareTo(item2['name']),
-          order: GroupedListOrder.DESC,
-          useStickyGroupSeparators: true,
-          groupSeparatorBuilder: (String value) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              value,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          itemBuilder: (c, element) {
-            return Card(
-              elevation: 8.0,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-              child: Container(
-                child: ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  leading: Icon(Icons.account_circle),
-                  title: Text(element['name']),
-                  trailing: Icon(Icons.arrow_forward),
-                ),
-              ),
-            );
-          },
-        ),
+      body: _loading ? LinearProgressIndicator() : _groupList(),
       floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           animatedIconTheme: IconThemeData(size: 22.0),
