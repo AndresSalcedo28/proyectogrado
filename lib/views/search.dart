@@ -1,4 +1,4 @@
-import 'package:app_practica/main.dart';
+import 'package:accesi/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';

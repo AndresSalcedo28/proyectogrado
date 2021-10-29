@@ -1,6 +1,6 @@
 {
-    "name": "app_practica",
-    "short_name": "app_practica",
+    "name": "accesi",
+    "short_name": "accesi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

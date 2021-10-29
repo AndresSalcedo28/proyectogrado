@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "802789776540",
+    "project_id": "accesi-4e26d",
+    "storage_bucket": "accesi-4e26d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802789776540:android:69c74b2145098e60196159",
+        "android_client_info": {
+          "package_name": "com.konrad.accesi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802789776540-vnhmd988fdgmurirl3l2gt247k25hi1b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCkpMbJzjNCpd6rMDs4qozIlox-BO9jtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802789776540-vnhmd988fdgmurirl3l2gt247k25hi1b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

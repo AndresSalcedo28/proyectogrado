@@ -1,10 +1,20 @@
-import 'package:app_practica/views/aboutUs.dart';
-import 'package:app_practica/views/search.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
+
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+import 'package:accesi/models/rule_model.dart';
+import 'package:accesi/views/about_us.dart';
+import 'package:accesi/views/search.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -12,18 +22,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WCAG APP',
+      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'WCAG 2.2 APP'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
-
 
   final String title;
 
@@ -35,16 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   bool _dialVisible = true;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  Widget _buildGroupSeparator(dynamic groupByValue) {
-    return Text('$groupByValue');
-  }
-
   List _elements = [
   {'name': 'John', 'group': 'Team A'},
   {'name': 'Will', 'group': 'Team B'},
@@ -54,6 +53,27 @@ class _MyHomePageState extends State<MyHomePage> {
   {'name': 'Danny', 'group': 'Team C'},
 ];
 
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  List<RuleModel> _rules = List.filled(
+      1,
+      new RuleModel(
+          nombre: 'Error',
+          descripcion: 'No se obtuvieron datos de la base de datos'));
+
+  Future<void> _fetchRules() async {
+    final rulesTmp = await RuleModel.fetchAll();
+
+    setState(() {
+      _rules = rulesTmp;
+    });
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
