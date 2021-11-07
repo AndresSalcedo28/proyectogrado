@@ -65,29 +65,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _groupsCard(PrincipioModel groups) {
     return Card(
-        child: Column(children: [
-      ListTile(
-        leading: Icon(
-          FontAwesomeIcons.list,
-          size: 35,
-        ),
-        title: Text(
-          groups.nombre,
-        ),
-        subtitle: Text("Definición: ${groups.definicion}"),
-        onTap: () {
-          Blurry.info(
-              title: groups.nombre,
-              description: groups.definicion,
-              confirmButtonText: 'Ver mas...',
-              onConfirmButtonPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ViewLineamientos(principio: groups)))).show(context);
-        },
-      )
-    ]));
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          InkWell(
+            child: Column(children: [
+              Icon(
+                FontAwesomeIcons.list,
+                size: 30,
+              ),
+              Padding(padding: EdgeInsets.all(10)),
+              Text(
+                groups.nombre,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 15),
+              )
+            ]),
+            //subtitle: Text("Definición: ${groups.definicion}"),
+            onTap: () {
+              Blurry.info(
+                      title: groups.nombre,
+                      description: groups.definicion,
+                      confirmButtonText: 'Ver mas...',
+                      onConfirmButtonPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewLineamientos(principio: groups))))
+                  .show(context);
+            },
+          )
+        ])));
   }
 
   Widget _groupList() {
@@ -106,8 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
-          child: Column(
+      body: Column(
         children: [
           Center(
             child: Container(
@@ -116,15 +125,25 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(children: [
                     Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(20.0),
                       child: Text(
                           "Accesibilidad WCAG es una app que te explicará sobre las normativas para que desarrolles apps geniales"),
-                    )
+                    ))
                   ])),
             ),
           ),
-          _loading ? LinearProgressIndicator() : _groupList(),
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      primary: false,
+                      children: _groups.map(_groupsCard).toList())))
         ],
-      )),
+      ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 22.0),
