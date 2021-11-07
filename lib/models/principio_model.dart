@@ -1,3 +1,4 @@
+import 'package:accesi/models/lineamiento_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PrincipioModel {
@@ -5,26 +6,34 @@ class PrincipioModel {
 
   static const String _nombre = 'nombre';
   static const String _definicion = 'definicion';
-  static const String _lineamientos = 'lineamientos';
 
   static final CollectionReference<Map<String, dynamic>> _collectionReference =
       FirebaseFirestore.instance.collection(PrincipioModel.collectionName);
 
-  final DocumentReference? reference;
+  List<LineamientoModel> _lineamientos = [];
+
+  final DocumentReference reference;
   final String nombre;
   final String definicion;
 
   PrincipioModel({
     required this.nombre, 
     required this.definicion, 
-    this.reference});
+    required this.reference});
 
   PrincipioModel.fromMap(Map<String, dynamic>? map, this.reference)
       : assert(map?[_nombre] != null),
         assert(map?[_definicion] != null),
-        assert(map?[_lineamientos] != null),
         this.nombre = map?[_nombre],
         this.definicion = map?[_definicion];
+
+  Future<List<LineamientoModel>> lineamientos() async {
+    if(_lineamientos.length != 0){
+      await this.fetchLineamientos();
+    }
+
+    return _lineamientos;
+  }
 
   PrincipioModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap)
       : this.fromMap(snap.data(), snap.reference);
@@ -35,4 +44,8 @@ class PrincipioModel {
 
   static Future<List<PrincipioModel>> fetchAll() async => PrincipioModel.listFromSnapshot(
       (await PrincipioModel._collectionReference.get()).docs);
+  
+  Future<void> fetchLineamientos() async {
+    await LineamientoModel.fetchLineamientoByPrincipio(this.reference);
+  }
 }

@@ -8,8 +8,12 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:blurry/blurry.dart';
+import 'package:blurry/resources/arrays.dart';
 
-import 'package:firebase_core/firebase_core.dart'; 
+import 'package:firebase_core/firebase_core.dart';
+
+import 'package:accesi/pages/view_lineamientos.dart';
 
 import 'package:accesi/models/principio_model.dart';
 import 'package:accesi/views/about_us.dart';
@@ -59,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   Widget _groupsCard(PrincipioModel groups) {
     return Card(
         child: Column(children: [
@@ -71,7 +74,17 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(
           groups.nombre,
         ),
-        subtitle: Text("Definición: ${groups.definicion}")
+        subtitle: Text("Definición: ${groups.definicion}"),
+        onTap: () {
+          Blurry.info(
+              title: groups.nombre,
+              description: groups.definicion,
+              confirmButtonText: 'Ver mas...',
+              onConfirmButtonPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewLineamientos(principio: groups))
+              )).show(context);
+        },
       )
     ]));
   }
@@ -81,8 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(children: _groups.map(_groupsCard).toList()),
     );
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -94,45 +105,61 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: _loading ? LinearProgressIndicator() : _groupList(),
+      body: Column(
+        children: [
+          Center(
+            child: Container(
+              child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  child: Column(children: [
+                Center(
+                  child: Text("Accesibilidad WCAG es una app que te explicará sobre las normativas para que desarrolles apps geniales"),
+                )
+              ])),
+            ),
+          ),
+          _loading ? LinearProgressIndicator() : _groupList(),
+        ],
+      ),
       floatingActionButton: SpeedDial(
-          animatedIcon: AnimatedIcons.menu_close,
-          animatedIconTheme: IconThemeData(size: 22.0),
-          visible: _dialVisible,
-          curve: Curves.bounceIn,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          //onOpen: () => print('OPENING DIAL'),
-          //onClose: () => print('DIAL CLOSED'),
-          tooltip: 'Speed Dial',
-          heroTag: 'speed-dial-hero-tag',
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 8.0,
-          shape: CircleBorder(),
-          children: [
-            SpeedDialChild(
+        animatedIcon: AnimatedIcons.menu_close,
+        animatedIconTheme: IconThemeData(size: 22.0),
+        visible: _dialVisible,
+        curve: Curves.bounceIn,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
+        //onOpen: () => print('OPENING DIAL'),
+        //onClose: () => print('DIAL CLOSED'),
+        tooltip: 'Speed Dial',
+        heroTag: 'speed-dial-hero-tag',
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 8.0,
+        shape: CircleBorder(),
+        children: [
+          SpeedDialChild(
               child: Icon(Icons.search_sharp),
               backgroundColor: Colors.green,
               label: 'Buscar',
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchView()))
-            ),
-            SpeedDialChild(
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SearchView()))),
+          SpeedDialChild(
               child: Icon(Icons.info_outline_rounded),
               backgroundColor: Colors.blue,
               label: 'Acerca de',
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> AboutUsView()))
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AboutUsView()))
               //onTap: () => print('SECOND CHILD'),
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.exit_to_app),
-              backgroundColor: Colors.red,
-              label: 'Salir App',
-              
-              //onTap: () => print('THIRD CHILD'),
-            ),
-          ],
-        ),
+              ),
+          SpeedDialChild(
+            child: Icon(Icons.exit_to_app),
+            backgroundColor: Colors.red,
+            label: 'Salir App',
+
+            //onTap: () => print('THIRD CHILD'),
+          ),
+        ],
+      ),
     );
   }
 }
