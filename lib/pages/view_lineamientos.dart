@@ -18,7 +18,7 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
   bool _fetch = true;
   List<LineamientoModel> _lineamientos = [];
 
-  Future<void> _fetchLineamientos({bool state:true}) async {
+  Future<void> _fetchLineamientos({bool state: true}) async {
     final fetchedLineamientos = await widget.principio.lineamientos();
 
     setState(() {
@@ -45,9 +45,7 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
               title: groups.nombre,
               description: groups.definicion,
               confirmButtonText: 'Ver mas...',
-              onConfirmButtonPressed: () => {
-                print("HolaMundo")
-              }).show(context);
+              onConfirmButtonPressed: () => {print("HolaMundo")}).show(context);
         },
       )
     ]));
@@ -60,9 +58,9 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
   }
 
   Future<void> _refreshGroups({bool state: true}) async {
-    final fetchedGroups = await LineamientoModel.fetchAll();
+    final fetchedLineamientos = await widget.principio.lineamientos();
     setState(() {
-      _lineamientos = fetchedGroups;
+      _lineamientos = fetchedLineamientos;
       _loading = false;
       _fetch = false;
     });
@@ -71,7 +69,7 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
   @override
   Widget build(BuildContext context) {
     if (_fetch) {
-      _refreshGroups(state: false);
+      _fetchLineamientos(state: false);
     }
 
     return Scaffold(
@@ -83,12 +81,14 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
           Center(
             child: Container(
               child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   child: Column(children: [
-                Center(
-                  child: Text("Accesibilidad WCAG es una app que te explicará sobre las normativas para que desarrolles apps geniales"),
-                )
-              ])),
+                    Center(
+                      child: Text(
+                          "Accesibilidad WCAG es una app que te explicará sobre las normativas para que desarrolles apps geniales"),
+                    )
+                  ])),
             ),
           ),
           _loading ? LinearProgressIndicator() : _groupList(),

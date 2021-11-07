@@ -16,10 +16,10 @@ class PrincipioModel {
   final String nombre;
   final String definicion;
 
-  PrincipioModel({
-    required this.nombre, 
-    required this.definicion, 
-    required this.reference});
+  PrincipioModel(
+      {required this.nombre,
+      required this.definicion,
+      required this.reference});
 
   PrincipioModel.fromMap(Map<String, dynamic>? map, this.reference)
       : assert(map?[_nombre] != null),
@@ -28,7 +28,7 @@ class PrincipioModel {
         this.definicion = map?[_definicion];
 
   Future<List<LineamientoModel>> lineamientos() async {
-    if(_lineamientos.length != 0){
+    if (_lineamientos.length == 0) {
       await this.fetchLineamientos();
     }
 
@@ -42,10 +42,13 @@ class PrincipioModel {
           List<DocumentSnapshot<Map<String, dynamic>>> snaps) =>
       snaps.map((snap) => new PrincipioModel.fromSnapshot(snap)).toList();
 
-  static Future<List<PrincipioModel>> fetchAll() async => PrincipioModel.listFromSnapshot(
-      (await PrincipioModel._collectionReference.get()).docs);
-  
+  static Future<List<PrincipioModel>> fetchAll() async =>
+      PrincipioModel.listFromSnapshot(
+          (await PrincipioModel._collectionReference.get()).docs);
+
   Future<void> fetchLineamientos() async {
-    await LineamientoModel.fetchLineamientoByPrincipio(this.reference);
+    print("Referencia: " + this.reference.toString());
+    this._lineamientos =
+        await LineamientoModel.fetchLineamientoByPrincipio(this.reference);
   }
 }
