@@ -1,6 +1,6 @@
 # accesi
 
-A new Flutter project.
+Proyecto de Grado Accesi.
 
 ## Getting Started
 
