@@ -1,35 +1,35 @@
+import 'package:accesi/models/criterio_model.dart';
 import 'package:accesi/models/lineamiento_model.dart';
 import 'package:accesi/models/principio_model.dart';
-import 'package:accesi/pages/view_criterios.dart';
 import 'package:flutter/material.dart';
 import 'package:blurry/blurry.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ViewLineamientos extends StatefulWidget {
-  final PrincipioModel principio;
+class ViewCriterios extends StatefulWidget {
+  final LineamientoModel lineamiento;
 
-  ViewLineamientos({required this.principio});
+  ViewCriterios({required this.lineamiento});
 
   @override
-  _ViewLineamientosState createState() => _ViewLineamientosState();
+  _ViewCriteriosState createState() => _ViewCriteriosState();
 }
 
-class _ViewLineamientosState extends State<ViewLineamientos> {
+class _ViewCriteriosState extends State<ViewCriterios> {
   bool _loading = true;
   bool _fetch = true;
-  List<LineamientoModel> _lineamientos = [];
+  List<CriterioModel> _criterios = [];
 
   Future<void> _fetchLineamientos({bool state: true}) async {
-    final fetchedLineamientos = await widget.principio.lineamientos();
+    final fetchedLineamientos = await widget.lineamiento.criterios();
 
     setState(() {
-      _lineamientos = fetchedLineamientos;
+      _criterios = fetchedLineamientos;
       _loading = false;
       _fetch = false;
     });
   }
 
-  Widget _groupsCard(LineamientoModel groups) {
+  Widget _groupsCard(CriterioModel groups) {
     return Card(
         child: Column(children: [
       ListTile(
@@ -46,11 +46,7 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
               title: groups.nombre,
               description: groups.definicion,
               confirmButtonText: 'Ver mas...',
-              onConfirmButtonPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ViewCriterios(lineamiento: groups)))).show(context);
+              onConfirmButtonPressed: () => {print("HolaMundo")}).show(context);
         },
       )
     ]));
@@ -58,14 +54,14 @@ class _ViewLineamientosState extends State<ViewLineamientos> {
 
   Widget _groupList() {
     return Container(
-      child: Column(children: _lineamientos.map(_groupsCard).toList()),
+      child: Column(children: _criterios.map(_groupsCard).toList()),
     );
   }
 
   Future<void> _refreshGroups({bool state: true}) async {
-    final fetchedLineamientos = await widget.principio.lineamientos();
+    final fetchedLineamientos = await widget.lineamiento.criterios();
     setState(() {
-      _lineamientos = fetchedLineamientos;
+      _criterios = fetchedLineamientos;
       _loading = false;
       _fetch = false;
     });

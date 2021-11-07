@@ -81,9 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
               description: groups.definicion,
               confirmButtonText: 'Ver mas...',
               onConfirmButtonPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ViewLineamientos(principio: groups))
-              )).show(context);
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewLineamientos(principio: groups)))).show(context);
         },
       )
     ]));
@@ -105,22 +106,25 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         children: [
           Center(
             child: Container(
               child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   child: Column(children: [
-                Center(
-                  child: Text("Accesibilidad WCAG es una app que te explicará sobre las normativas para que desarrolles apps geniales"),
-                )
-              ])),
+                    Center(
+                      child: Text(
+                          "Accesibilidad WCAG es una app que te explicará sobre las normativas para que desarrolles apps geniales"),
+                    )
+                  ])),
             ),
           ),
           _loading ? LinearProgressIndicator() : _groupList(),
         ],
-      ),
+      )),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 22.0),
